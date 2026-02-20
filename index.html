@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="no">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Yunus trenger en Frank</title>
+  <meta name="description" content="Yunus trenger en Frank — booking, QR-bestilling og full fart." />
+  <style>
+    :root {
+      --bg: #0b0b0b;
+      --cream: #f6f3ee;
+      --hot: #ff2f68;
+      --lime: #b8ff3d;
+      --cyan: #4ad6ff;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--cream);
+      overflow: hidden;
+    }
+
+    .noise {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: .07;
+      background-image: radial-gradient(circle at 20% 20%, #fff 0 1px, transparent 1px), radial-gradient(circle at 80% 70%, #fff 0 1px, transparent 1px);
+      background-size: 4px 4px, 3px 3px;
+      mix-blend-mode: soft-light;
+    }
+
+    .glow {
+      position: fixed;
+      width: 60vmax;
+      height: 60vmax;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: .35;
+      animation: drift 11s ease-in-out infinite alternate;
+    }
+
+    .g1 { background: var(--hot); top: -20vmax; left: -10vmax; }
+    .g2 { background: var(--cyan); bottom: -24vmax; right: -10vmax; animation-delay: 1.5s; }
+    .g3 { background: var(--lime); top: 20vmax; right: 18vmax; animation-delay: 3s; }
+
+    @keyframes drift {
+      from { transform: translate(0,0) scale(1); }
+      to { transform: translate(6vmax, -4vmax) scale(1.08); }
+    }
+
+    .wrap {
+      position: relative;
+      z-index: 2;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: clamp(1rem, 4vw, 3rem);
+      text-align: center;
+    }
+
+    .panel {
+      width: min(1100px, 100%);
+      border: 1px solid rgba(246, 243, 238, .2);
+      background: rgba(11, 11, 11, .55);
+      backdrop-filter: blur(8px);
+      padding: clamp(1.2rem, 3vw, 2.4rem);
+      border-radius: 26px;
+      box-shadow: 0 0 0 1px rgba(255,255,255,.03) inset;
+    }
+
+    .kicker {
+      display: inline-block;
+      background: var(--cream);
+      color: #111;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      padding: .42rem .8rem;
+      border-radius: 999px;
+      font-size: .78rem;
+      margin-bottom: 1rem;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2.4rem, 10vw, 7.5rem);
+      line-height: .92;
+      text-transform: uppercase;
+      letter-spacing: -.03em;
+      font-weight: 900;
+      text-wrap: balance;
+    }
+
+    .accent {
+      color: #111;
+      background: linear-gradient(90deg, var(--lime), var(--cyan));
+      padding: 0 .14em;
+      border-radius: .08em;
+      box-decoration-break: clone;
+      -webkit-box-decoration-break: clone;
+    }
+
+    .sub {
+      max-width: 68ch;
+      margin: 1.2rem auto 1.6rem;
+      font-size: clamp(1rem, 2.2vw, 1.22rem);
+      line-height: 1.45;
+      color: rgba(246,243,238,.9);
+    }
+
+    .chips {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: .55rem;
+      margin-top: .9rem;
+    }
+
+    .chip {
+      font-weight: 700;
+      font-size: .88rem;
+      letter-spacing: .03em;
+      text-transform: uppercase;
+      border: 1px solid rgba(246,243,238,.28);
+      border-radius: 999px;
+      padding: .45rem .8rem;
+      background: rgba(255,255,255,.06);
+    }
+
+    .marquee {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 3;
+      border-top: 1px solid rgba(246,243,238,.18);
+      background: rgba(0,0,0,.45);
+      overflow: hidden;
+      white-space: nowrap;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      font-size: clamp(.75rem, 1.7vw, 1rem);
+      padding: .55rem 0;
+    }
+
+    .marquee span {
+      display: inline-block;
+      padding-left: 100%;
+      animation: slide 18s linear infinite;
+    }
+
+    @keyframes slide {
+      from { transform: translateX(0); }
+      to { transform: translateX(-100%); }
+    }
+
+    @media (max-width: 700px) {
+      body { overflow: auto; }
+      .wrap { min-height: calc(100vh - 40px); }
+    }
+  </style>
+</head>
+<body>
+  <div class="glow g1" aria-hidden="true"></div>
+  <div class="glow g2" aria-hidden="true"></div>
+  <div class="glow g3" aria-hidden="true"></div>
+  <div class="noise" aria-hidden="true"></div>
+
+  <main class="wrap">
+    <section class="panel">
+      <div class="kicker">Future of the bar</div>
+      <h1>
+        Yunus trenger en
+        <span class="accent">Frank</span>
+      </h1>
+      <p class="sub">
+        Skaff en Mac mini, så går vi fra idé til maskin: booking på autopilot,
+        QR-bestilling i baren og et setup som føles som en kampanje — ikke et regneark.
+      </p>
+      <div class="chips">
+        <span class="chip">Booking Engine</span>
+        <span class="chip">QR i Baren</span>
+        <span class="chip">Automasjon 24/7</span>
+        <span class="chip">Oslo Øst Vibes</span>
+      </div>
+    </section>
+  </main>
+
+  <div class="marquee" aria-hidden="true">
+    <span>Yunus trenger en Frank • Mac mini inn • QR-bestilling ut • Booking i gang • Yunus trenger en Frank •</span>
+  </div>
+</body>
+</html>
