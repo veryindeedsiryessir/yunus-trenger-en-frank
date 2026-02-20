@@ -1,0 +1,485 @@
+<!doctype html>
+<html lang="no">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OpenClaw Setup for Yunus</title>
+  <meta name="description" content="Detaljert OpenClaw setup for Yunus: booking, QR-bestilling, automasjon og drift på Mac mini." />
+  <style>
+    :root {
+      --bg: #07070a;
+      --panel: rgba(16, 16, 22, 0.72);
+      --text: #f7f8ff;
+      --muted: #b9bfd6;
+      --oc-orange: #ff4500;
+      --oc-purple: #8b5cf6;
+      --oc-cyan: #27d7ff;
+      --oc-lime: #b4ff3f;
+      --line: rgba(255, 255, 255, 0.14);
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body { margin: 0; padding: 0; }
+
+    body {
+      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(85vmax 85vmax at -10% -20%, rgba(255, 69, 0, .2), transparent 45%),
+        radial-gradient(65vmax 65vmax at 120% -10%, rgba(139, 92, 246, .18), transparent 50%),
+        radial-gradient(70vmax 70vmax at 50% 120%, rgba(39, 215, 255, .16), transparent 45%),
+        var(--bg);
+      line-height: 1.5;
+      overflow-x: hidden;
+    }
+
+    .noise {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: .06;
+      background-image:
+        radial-gradient(circle at 35% 35%, #fff 0 1px, transparent 1px),
+        radial-gradient(circle at 65% 65%, #fff 0 1px, transparent 1px);
+      background-size: 4px 4px, 3px 3px;
+      mix-blend-mode: soft-light;
+      z-index: 0;
+    }
+
+    .container {
+      width: min(1160px, 92vw);
+      margin: 0 auto;
+      position: relative;
+      z-index: 2;
+    }
+
+    .topnav {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(12px);
+      background: rgba(7, 7, 10, 0.5);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .topnav-inner {
+      width: min(1160px, 92vw);
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: .8rem 0;
+      gap: 1rem;
+    }
+
+    .logo {
+      font-weight: 900;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      font-size: .84rem;
+      color: var(--muted);
+    }
+
+    .logo strong {
+      color: var(--text);
+      font-size: .95rem;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: .65rem;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: .4rem;
+      text-decoration: none;
+      border-radius: 999px;
+      font-weight: 800;
+      font-size: .82rem;
+      letter-spacing: .02em;
+      padding: .56rem .95rem;
+      border: 1px solid var(--line);
+      color: var(--text);
+      background: rgba(255,255,255,.05);
+      transition: transform .18s ease, border-color .18s ease, background .18s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      border-color: rgba(255,255,255,.38);
+      background: rgba(255,255,255,.11);
+    }
+
+    .btn.primary {
+      color: #101010;
+      border-color: transparent;
+      background: linear-gradient(90deg, var(--oc-lime), var(--oc-cyan));
+    }
+
+    .hero {
+      padding: clamp(2.2rem, 6vw, 4.6rem) 0 2.4rem;
+    }
+
+    .kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      border-radius: 999px;
+      background: rgba(255,255,255,.09);
+      border: 1px solid var(--line);
+      padding: .35rem .72rem;
+      font-size: .74rem;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      font-weight: 800;
+      color: var(--muted);
+    }
+
+    .dot {
+      width: .52rem;
+      height: .52rem;
+      border-radius: 999px;
+      background: var(--oc-lime);
+      box-shadow: 0 0 14px var(--oc-lime);
+      flex: 0 0 auto;
+    }
+
+    h1 {
+      margin: .9rem 0 .7rem;
+      font-size: clamp(2.1rem, 8vw, 5.4rem);
+      line-height: .9;
+      letter-spacing: -.03em;
+      text-transform: uppercase;
+      text-wrap: balance;
+    }
+
+    .gradient-text {
+      background: linear-gradient(90deg, var(--oc-orange), var(--oc-purple), var(--oc-cyan));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .lead {
+      max-width: 70ch;
+      color: var(--muted);
+      font-size: clamp(1rem, 2.2vw, 1.2rem);
+      margin-bottom: 1rem;
+    }
+
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .5rem;
+      margin-top: .9rem;
+    }
+
+    .badge {
+      font-size: .77rem;
+      font-weight: 700;
+      border-radius: 999px;
+      padding: .42rem .75rem;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.06);
+      color: #e6ebff;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+
+    .grid {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .grid.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+    .section {
+      margin: 1.3rem 0;
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 1rem;
+      box-shadow: 0 8px 35px rgba(0,0,0,.32);
+    }
+
+    .card h2,
+    .card h3 {
+      margin: 0 0 .56rem;
+      line-height: 1.1;
+      letter-spacing: -.01em;
+    }
+
+    .card p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .mini-title {
+      font-size: .74rem;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: #ccd2ec;
+      font-weight: 800;
+      margin-bottom: .45rem;
+    }
+
+    .stack-list,
+    .check-list,
+    .timeline,
+    .spec-list {
+      list-style: none;
+      padding: 0;
+      margin: .5rem 0 0;
+      display: grid;
+      gap: .55rem;
+    }
+
+    .stack-list li,
+    .check-list li,
+    .timeline li,
+    .spec-list li {
+      border: 1px solid rgba(255,255,255,.1);
+      background: rgba(255,255,255,.04);
+      border-radius: 12px;
+      padding: .62rem .74rem;
+      color: #e3e7f8;
+      font-size: .95rem;
+    }
+
+    .timeline li {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: .65rem;
+      align-items: start;
+    }
+
+    .phase {
+      min-width: 78px;
+      border-radius: 999px;
+      text-align: center;
+      padding: .2rem .6rem;
+      font-size: .72rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      background: linear-gradient(90deg, var(--oc-purple), var(--oc-cyan));
+      color: #0a0a0a;
+      align-self: center;
+    }
+
+    .diagram {
+      display: grid;
+      gap: .65rem;
+    }
+
+    .flow {
+      border: 1px dashed rgba(255,255,255,.25);
+      border-radius: 14px;
+      padding: .75rem;
+      background: rgba(255,255,255,.03);
+      font-weight: 700;
+      color: #f4f7ff;
+    }
+
+    .flow small {
+      display: block;
+      color: var(--muted);
+      font-weight: 500;
+      margin-top: .25rem;
+    }
+
+    .cta {
+      margin: 2rem 0 3rem;
+      text-align: center;
+      padding: 1.3rem;
+      border-radius: 22px;
+      border: 1px solid rgba(255,255,255,.22);
+      background: linear-gradient(120deg, rgba(255,69,0,.18), rgba(139,92,246,.16), rgba(39,215,255,.16));
+    }
+
+    .cta h2 {
+      margin: 0 0 .45rem;
+      font-size: clamp(1.4rem, 3.8vw, 2.5rem);
+      text-transform: uppercase;
+      letter-spacing: -.02em;
+    }
+
+    .cta p {
+      margin: 0 auto .85rem;
+      max-width: 55ch;
+      color: #eef2ff;
+    }
+
+    footer {
+      border-top: 1px solid var(--line);
+      color: #a9b0c7;
+      padding: 1rem 0 2.3rem;
+      font-size: .9rem;
+      text-align: center;
+    }
+
+    @media (max-width: 980px) {
+      .grid.two,
+      .grid.three { grid-template-columns: 1fr; }
+      .topnav-inner { padding: .75rem 0; }
+      .logo { font-size: .75rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="noise" aria-hidden="true"></div>
+
+  <header class="topnav">
+    <div class="topnav-inner">
+      <div class="logo"><strong>OpenClaw</strong> setup // Yunus x Frank</div>
+      <nav class="nav-links">
+        <a class="btn" href="./index.html">← Forside</a>
+        <a class="btn primary" href="#start">Kjør plan</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero" id="start">
+      <span class="kicker"><span class="dot"></span> Klar for Mac mini mode</span>
+      <h1>
+        <span class="gradient-text">OpenClaw Setup</span><br />
+        for Yunus
+      </h1>
+      <p class="lead">
+        Dette er blueprinten for å gjøre Svanen mer flytende i drift: booking, QR-bestilling i baren,
+        automatiske oppgaver, daglige briefinger og systemer som faktisk sparer tid i stedet for å stjele den.
+      </p>
+      <div class="badge-row">
+        <span class="badge">Bar Ops</span>
+        <span class="badge">Booking Engine</span>
+        <span class="badge">QR Order Flow</span>
+        <span class="badge">Automasjon 24/7</span>
+        <span class="badge">Mac mini</span>
+      </div>
+    </section>
+
+    <section class="section grid three">
+      <article class="card">
+        <div class="mini-title">Mål #1</div>
+        <h3>Raskere drift</h3>
+        <p>Automatiser repetitive ting: svar på vanlige spørsmål, booking-oppfølging, enkel rapportering.</p>
+      </article>
+      <article class="card">
+        <div class="mini-title">Mål #2</div>
+        <h3>Bedre gjesteflyt</h3>
+        <p>QR-bestilling i baren med tydelig menylogikk, færre stopp i service, mer flyt i lokalet.</p>
+      </article>
+      <article class="card">
+        <div class="mini-title">Mål #3</div>
+        <h3>Bedre beslutninger</h3>
+        <p>Morgen-briefs + dashboards gir Yunus klar oversikt på minutter, ikke timer.</p>
+      </article>
+    </section>
+
+    <section class="section grid two">
+      <article class="card">
+        <h2>Arkitektur (enkelt forklart)</h2>
+        <div class="diagram">
+          <div class="flow">Telegram / Admin-chat <small>Yunus sender kommandoer og får svar i sanntid</small></div>
+          <div class="flow">OpenClaw Agent <small>Tar beslutninger, kjører tools, logger handlinger</small></div>
+          <div class="flow">Svanen-systemer <small>Booking, QR-bestilling, dashboard, rapporter</small></div>
+          <div class="flow">Daglig output <small>Morgenbrief, alerts, status, forslag til tiltak</small></div>
+        </div>
+      </article>
+
+      <article class="card">
+        <h2>Tool stack vi bruker</h2>
+        <ul class="stack-list">
+          <li><strong>OpenClaw</strong> – orkestrering og AI-agent logikk</li>
+          <li><strong>Telegram</strong> – kommandosenter og varslinger</li>
+          <li><strong>GitHub</strong> – versjonering og deploy</li>
+          <li><strong>Cron / Heartbeat</strong> – faste rutiner og proaktive checks</li>
+          <li><strong>Web + browser tools</strong> – research, oppdateringer, drift</li>
+        </ul>
+      </article>
+    </section>
+
+    <section class="section grid two">
+      <article class="card">
+        <h2>Implementeringsfaser</h2>
+        <ul class="timeline">
+          <li>
+            <span class="phase">Fase 1</span>
+            <div><strong>Core install</strong><br />Mac mini + OpenClaw + tilgangsstyring + backup-rutiner.</div>
+          </li>
+          <li>
+            <span class="phase">Fase 2</span>
+            <div><strong>Booking flow</strong><br />Automatisk oppfølging, enkle statusmeldinger og intern oversikt.</div>
+          </li>
+          <li>
+            <span class="phase">Fase 3</span>
+            <div><strong>QR i baren</strong><br />QR-sider for bestilling + tracking av populære valg og rush-tider.</div>
+          </li>
+          <li>
+            <span class="phase">Fase 4</span>
+            <div><strong>Daily AI Ops</strong><br />Morgenbrief, alerts og forslag til konkrete tiltak hver dag.</div>
+          </li>
+        </ul>
+      </article>
+
+      <article class="card">
+        <h2>Mac mini anbefalt setup</h2>
+        <ul class="spec-list">
+          <li><strong>Maskin:</strong> Mac mini (M2/M3), 16GB+ RAM, 512GB+ SSD</li>
+          <li><strong>Drift:</strong> 24/7 med auto-restart og enkel health-check</li>
+          <li><strong>Sikkerhet:</strong> dedikert bruker, 2FA, begrensede nøkler</li>
+          <li><strong>Backup:</strong> daglig snapshot av config + kritiske filer</li>
+          <li><strong>Skalerbarhet:</strong> klar for flere workflows og flere venues</li>
+        </ul>
+      </article>
+    </section>
+
+    <section class="section grid two">
+      <article class="card">
+        <h2>Hva Yunus får ut av dette</h2>
+        <ul class="check-list">
+          <li>Færre manuelle oppgaver i hverdagen</li>
+          <li>Raskere beslutninger med daglig oversikt</li>
+          <li>Bedre gjesteopplevelse i baren</li>
+          <li>Mer kontroll på booking + drift + oppfølging</li>
+          <li>Et system som kan vokse med Svanen-universet</li>
+        </ul>
+      </article>
+
+      <article class="card">
+        <h2>OpenClaw-style sikkerhet</h2>
+        <ul class="check-list">
+          <li>Minst mulig tilgang som standard (least privilege)</li>
+          <li>All logikk i versjonert repo (sporbarhet)</li>
+          <li>Klare grenser for hva agenten kan sende ut eksternt</li>
+          <li>Review av endringer før prod-push</li>
+          <li>Recovery-plan hvis noe stopper opp</li>
+        </ul>
+      </article>
+    </section>
+
+    <section class="cta">
+      <h2>Yunus trenger en Frank — nå har vi planen.</h2>
+      <p>
+        Neste steg er enkelt: vi setter opp Mac mini, kjører fase 1, og går live på de første workflowene.
+        Så bygger vi på med booking + QR + daily ops i samme tempo som teamet tåler.
+      </p>
+      <a class="btn primary" href="./index.html">Tilbake til kampanjesiden</a>
+    </section>
+
+    <footer>
+      OpenClaw x Svanen • Oslo • Built for ekte drift, ikke bare slides.
+    </footer>
+  </main>
+</body>
+</html>

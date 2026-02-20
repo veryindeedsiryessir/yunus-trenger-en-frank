@@ -133,6 +133,36 @@
       background: rgba(255,255,255,.06);
     }
 
+    .actions {
+      margin-top: 1.3rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: .7rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      font-size: .8rem;
+      border-radius: 999px;
+      padding: .58rem .95rem;
+      border: 1px solid rgba(246,243,238,.28);
+      color: var(--cream);
+      background: rgba(255,255,255,.05);
+    }
+
+    .btn.primary {
+      color: #111;
+      border-color: transparent;
+      background: linear-gradient(90deg, var(--lime), var(--cyan));
+    }
+
     .marquee {
       position: fixed;
       bottom: 0;
@@ -189,6 +219,10 @@
         <span class="chip">QR i Baren</span>
         <span class="chip">Automasjon 24/7</span>
         <span class="chip">Oslo Øst Vibes</span>
+      </div>
+      <div class="actions">
+        <a class="btn primary" href="./setup.html">Se OpenClaw-setup for Yunus</a>
+        <a class="btn" href="https://github.com/veryindeedsiryessir/yunus-trenger-en-frank" target="_blank" rel="noopener">GitHub repo</a>
       </div>
     </section>
   </main>
